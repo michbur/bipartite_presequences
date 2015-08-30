@@ -3,8 +3,7 @@
 
 
 library(signalHsmm)
-all_prots <- read_uniprot("C:/Users/Mihal/Documents/GitHub/bipartite_presequences/sp_propeptide.txt",
-             c("signal", "propep"))
+all_prots <- read_uniprot("Csp_propeptide.txt", c("signal", "propep"))
 
 #good prots - proteins that have single propeptide starting immediately after signal peptide
 good_prots <- all_prots[sapply(prots, function(i)
