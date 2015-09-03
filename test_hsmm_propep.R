@@ -105,3 +105,33 @@ abline(a=0, b= 1)
 auc <- performance(pred, measure = "auc")
 auc <- unlist(slot(auc, "y.values"))
 auc
+
+# a co jak porównamy się z sekwencjami zupełnie bez peptydu sygnałowego?
+
+negative_decision <- lapply(benchmark_dat[300:400], function(prot) 
+  signalHsmm_propep_decision(prot, aa_group = res[["aa_group"]], 
+                             pipar = res[["pipar"]], 
+                             tpmpar = res[["tpmpar"]], 
+                             od = res[["od"]], 
+                             overall_probs_log = res[["overall_probs_log"]], 
+                             params = res[["params"]]))
+
+decisions_comp <- data.frame(rbind(cbind(sapply(decisions_aa2, function(x) x$propep_probability), type="pos"), 
+                                   cbind(sapply(negative_decision, function(x) x$propep_probability), type="neg")))
+
+decisions_comp$V1 <- as.numeric(as.character(decisions_comp$V1))
+
+ggplot(decisions_comp, aes(x=V1, fill=type)) +
+  geom_density(alpha=.3)
+
+library(ROCR)
+
+pred <- prediction(decisions_comp$V1,decisions_comp$type)
+
+roc.perf = performance(pred, measure = "tpr", x.measure = "fpr")
+plot(roc.perf)
+abline(a=0, b= 1)
+
+auc <- performance(pred, measure = "auc")
+auc <- unlist(slot(auc, "y.values"))
+auc
