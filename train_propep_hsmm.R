@@ -11,17 +11,17 @@ train_propep_hsmm <- function(train_data, aa_group, max_length = 32) {
   propeps <- lapply(train_data, function(i)
     i[attr(i, "propep")[1]:attr(i, "propep")[2]])
   
-  t4 <- rep(0, length(aa_list))
-  temp <- table(biogram:::degenerate(unlist(propeps), aa_list))
+  t4 <- rep(0, length(aa_group))
+  temp <- table(biogram:::degenerate(unlist(propeps), aa_group))
   t4[as.numeric(names(temp))] <- temp
-  names(t4) <- 1:length(aa_list)
+  names(t4) <- 1:length(aa_group)
   
   matures <- lapply(train_data, function(i)
     i[attr(i, "propep")[2]:length(i)])
-  t5 <- rep(0, length(aa_list))
-  temp <- table(biogram:::degenerate(unlist(matures), aa_list))
+  t5 <- rep(0, length(aa_group))
+  temp <- table(biogram:::degenerate(unlist(matures), aa_group))
   t5[as.numeric(names(temp))] <- temp
-  names(t5) <- 1:length(aa_list)
+  names(t5) <- 1:length(aa_group)
   
   
   overall <- t5 #table(degenerate(unlist(analized_sequences), aa5))
@@ -34,7 +34,7 @@ train_propep_hsmm <- function(train_data, aa_group, max_length = 32) {
   params <- cbind(params, propepDensity, rep(1/max_length, max_length))
   
   #setting params for hmm -------
-  ngroups <- length(aa_list)
+  ngroups <- length(aa_group)
   additional_margin = 10
   pipar <- c(1,0,0,0,0)
   tpmpar <- matrix(c(0, 1, 0, 0, 0,
@@ -48,7 +48,7 @@ train_propep_hsmm <- function(train_data, aa_group, max_length = 32) {
                  (t4/sum(t4))[1L:ngroups],
                  (t5/sum(t5))[1L:ngroups]), 5, byrow = TRUE)
   
-  res <- list(aa_group = aa_list, pipar = pipar, tpmpar = tpmpar, od = od, 
+  res <- list(aa_group = aa_group, pipar = pipar, tpmpar = tpmpar, od = od, 
               overall_probs_log = overall_probs_log, params = params)
   class(res) <- "sighsmm_model"
   res
