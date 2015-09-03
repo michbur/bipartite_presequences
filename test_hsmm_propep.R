@@ -1,4 +1,5 @@
 
+
 # mini test
 
 library(signalHsmm)
@@ -6,6 +7,8 @@ source("signalHsmm_propep_decision.R")
 source("train_propep_hsmm.R")
 
 all_prots <- read_uniprot("sp_propeptide.txt", c("signal", "propep"), kwds = c("toxin", "poison", "venom"))
+
+max_length = 32
 
 # wybór zbioru uczączego
 good_prots <- all_prots[sapply(all_prots, function(i)
@@ -15,7 +18,7 @@ train_data <- good_prots[propepLength<=max_length]
 test_idx <- sample(1:length(train_data), 100)
 test_data <- train_data[test_idx]
 
-max_length = 32
+
 # podstawowe kodowanie z signalHsmm
 aa_list <- signalHsmm:::signalHsmm_main_model$aa_group
 
