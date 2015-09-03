@@ -2,6 +2,8 @@
 # mini test
 
 library(signalHsmm)
+source("signalHsmm_propep_decision.R")
+source("train_propep_hsmm.R")
 
 all_prots <- read_uniprot("sp_propeptide.txt", c("signal", "propep"), kwds = c("toxin", "poison", "venom"))
 
